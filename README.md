@@ -1,48 +1,65 @@
-# Distributed Systems - Programme Management Web GUI
+# Distributed Systems Assignment - Programme Management
 
-This is a web-based GUI for managing programmes, developed as part of a distributed systems assignment. The application interacts with a backend service running on `localhost:9090` to fetch, add, update, and delete programme records.
+This project is part of the Distributed Systems Assignment (Assignment 1). It includes a web-based GUI and CLI client
+for managing programmes.
 
-## Features
+## Group Members
 
-- Fetch all programmes or filter them by programme code or faculty.
+- [Frans Nekongo- 221004351]
+- []
+- []
+- []
+
+## Assignment 1
+
+### Question 1: REST API
+
+This section contains a web-based GUI for managing programmes. It interacts with a backend service running on
+`localhost:9090` to perform CRUD operations on programme records.
+
+**Features:**
+
+- Fetch all programmes or filter by programme code or faculty.
 - Fetch programmes due for review.
 - Add, update, or delete programme records.
-- Display programme information in a clean, intuitive UI.
+- Display programme information in an intuitive UI.
 
-## Getting Started
+**Getting Started:**
 
-First, run the backend service on port 9090. Then, start the development server for the web interface.
+1. Run the backend service on port 9090.
+2. Start the development server for the web interface:
 
-### Running the Web GUI
+   ```bash
+   npm run dev
 
-You can use any of the following commands to run the development server:
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-```bash
-npm run dev
-```
-Once started, open [http://localhost:3000](http://localhost:3000) in your browser.
+**Backend API:**
+The web interface communicates with the backend service at [http://localhost:9090](http://localhost:9090).
 
-## Backend API
+**Usage:**
 
-The web interface communicates with a backend running at [http://localhost:9090](http://localhost:9090). {//Palema advised change this to ip, try NGROK}
+- **Fetching Programmes:** Use buttons to fetch all or filter by `programmeCode` or `faculty`.
+- **Add a Programme:** Click "Add Programme," fill in the form, and submit.
+- **Update a Programme:** Click "Edit," modify the form, and submit.
+- **Delete a Programme:** Click "Delete" next to a programme to remove it.
 
-## Project Structure
+### Running the Service and Client
 
-The application is built using Next.js, React, and Tailwind CSS. Key components include:
+1. **Run the Service:**
+   Execute the following command to start the service:
 
-- **ProgrammeForm**: Handles the form for adding or updating a programme.
-- **ProgrammeList**: Displays a list of programmes with options to edit or delete.
-- **ErrorDisplay**: Shows error messages in case of failed operations.
-- **InputForm**: Allows the user to input programme details or search by filters.
+   ```bash
+   bal run ../{path to service folder}
+2. **Run the Client:**
+   After starting the service, run the GUI or CLI client with:
+    
+   ```bash
+   bal run client.bal
 
-## How to Use
+**Programme Data:**
+Dates are formatted as RFC 3339 when adding or updating programmes.
 
-- **Fetching Programmes**: Use the buttons to fetch all programmes or filter by `programmeCode` or `faculty`.
-- **Add a Programme**: Click "Add Programme," fill in the form, and submit.
-- **Update a Programme**: Click the "Edit" button next to a programme, make changes in the form, and submit.
-- **Delete a Programme**: Click the "Delete" button next to a programme to remove it.
+### Question 2: gRPC
 
-## Programme Data
-
-When adding or updating a programme, the registration date is automatically formatted as RFC 3339 before being sent to the server.
 
