@@ -1,0 +1,71 @@
+
+probuffer stuff
+
+Commit 1: Initial Protocol Buffer Setup
+This commit initializes the protocol buffer definition with the basic structure, including product operations.
+
+Commit Message:
+
+sql
+Copy code
+feat(proto): initial setup for gRPC online shopping system
+
+- Added the ShoppingService with product and user management functionality.
+- Defined messages for product creation, updates, and removal.
+- Added user creation and basic customer operations.
+Commit 2: Add User and Admin Functionality
+This commit adds specific user-related definitions and the CheckUserType functionality for determining whether a user is an admin or a customer.
+
+Commit Message:
+
+sql
+Copy code
+feat(proto): add user and admin functionality
+
+- Added user definition with fields for user profile.
+- Added CheckUserType RPC to determine if a user is an admin or customer.
+- Defined user-type messages for login and user management.
+Commit 3: Add Cart Management Functions
+This commit introduces cart-related operations such as adding items to the cart, removing them, and checking out.
+
+Commit Message:
+
+diff
+Copy code
+feat(proto): add cart management functionality
+
+- Added AddToCart and RemoveFromCart RPCs for managing the shopping cart.
+- Defined request and response messages for handling cart operations.
+Commit 4: Add Product Listing and Search Functionality
+This commit includes the ability for customers to list all available products and search for specific ones.
+
+Commit Message:
+
+diff
+Copy code
+feat(proto): add product listing and search functionality
+
+- Added ListAvailableProducts and SearchProduct RPCs for customers.
+- Defined request and response messages for listing and searching products.
+Commit 5: Implement View Cart Functionality
+This commit adds the ViewCart RPC, allowing customers to view the contents of their shopping cart.
+
+Commit Message:
+
+sql
+Copy code
+feat(proto): add view cart functionality
+
+- Added ViewCart RPC to show the contents of the customer's cart.
+- Defined request and response messages for viewing cart items.
+Commit 6: Add Place Order Functionality
+This commit introduces the PlaceOrder functionality, allowing customers to place orders for the items in their cart.
+
+Commit Message:
+
+vbnet
+Copy code
+feat(proto): add place order functionality
+
+- Added PlaceOrder RPC to allow customers to place an order for items in their cart.
+- Defined request and response messages for handling order placement.
