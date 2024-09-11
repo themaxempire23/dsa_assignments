@@ -105,7 +105,6 @@ message AddToCartResponse {
 }
 
 message RemoveFromCartRequest {
-    string user_id = 1;
     string sku = 2;
 }
 
@@ -140,6 +139,10 @@ message Product {
     string status = 6; // e.g., "available", "out_of_stock"
 }
 
+message CartItem  {
+   string user_id = 1;
+   string sku = 2;
+};
 // User definition
 message User {
     string user_id = 1;
