@@ -194,4 +194,4 @@ components:
           description: The code of the course
         nqfLevel:
           type: integer
-          description: The NQF level of the course
+          description: The
