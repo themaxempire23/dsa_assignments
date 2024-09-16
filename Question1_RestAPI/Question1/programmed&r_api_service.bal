@@ -156,28 +156,7 @@ service / on ep0 {
     }
 
     // # Add a new programme
-    resource function post programmes(@http:Payload Programme[] programmes) returns Programme[]|error {
-        string[] conflictingProgrammeCodes = from Programme programme in programmes
-            where ProgrammeTable.hasKey(programme.programmeCode)
-            select programme.programmeCode;
-
-        if (conflictingProgrammeCodes.length() > 0) {
-            // Manually concatenate the conflicting programme codes
-            string errorMsg = "CONFLICTING PROGRAMME CODES: ";
-            foreach string code in conflictingProgrammeCodes {
-                errorMsg += code + " ";
-            }
-            // Trim the trailing space
-            errorMsg = errorMsg.trim();
-
-            return error(errorMsg);
-        } else {
-            foreach Programme programme in programmes {
-                ProgrammeTable.add(programme);
-            }
-            return programmes;
-        }
-    }
+    
 
     // # Update an existing programme's information
     resource function put programmes/[string programmeCode](@http:Payload Programme payload) returns Programme|InvalidProgrammeCodeError {
