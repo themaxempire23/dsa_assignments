@@ -64,7 +64,23 @@ service / on ep0 {
         };
     }
 
-   
+    // # Retrieve a list of all programmes
+    resource function get programmes() returns Programme[]|http:InternalServerError {
+        return ProgrammeTable.toArray();
+    }
+
+    // # Retrieve a specific programme by programme code
+    resource function get programmes/[string programmeCode]() returns Programme|http:NotFound {
+        Programme? programme = ProgrammeTable[programmeCode];
+        if (programme is ()) {
+            return {
+                body: {
+                    errmsg: string `Invalid programme code: ${programmeCode}`
+                }
+            };
+        }
+        return programme;
+    }
 
     // # Retrieve all programmes that belong to the same faculty
     resource function get programmes/faculty/[string facultyName]() returns Programme[]|http:NotFound {
