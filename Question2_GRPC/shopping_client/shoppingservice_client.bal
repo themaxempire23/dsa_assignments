@@ -93,10 +93,7 @@ function removeProduct() returns error? {
     io:println("Remaining products: ", response.products);
 }
 
-function listAvailableProducts() returns error? {
-    ListAvailableProductsResponse response = check ep->ListAvailableProducts({});
-    io:println("Available products: ", response.products);
-}
+
 
 function searchProduct() returns error? {
     SearchProductRequest request = {sku: io:readln("Enter product SKU to search: ")};
