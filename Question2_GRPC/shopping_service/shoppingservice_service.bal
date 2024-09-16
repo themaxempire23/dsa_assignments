@@ -88,21 +88,7 @@ service "ShoppingService" on new grpc:Listener(9090) {
         return {products: availableProducts};
     }
 
-    remote function SearchProduct(SearchProductRequest value) returns SearchProductResponse|error {
-        // Retrieve the product using SKU from the ProductTable
-        Product? product = ProductTable[value.sku];
-
-        if (product is Product) {
-            // Create and return the response with the product details
-            SearchProductResponse response = {
-                product: product
-            };
-            return response;
-        } else {
-            // Return an error if the product does not exist
-            return error("Product with SKU " + value.sku + " not found.");
-        }
-    }
+    
 
     remote function AddToCart(AddToCartRequest value) returns AddToCartResponse|error {
         // Create a CartItem record with immutable key
