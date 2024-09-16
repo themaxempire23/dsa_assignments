@@ -21,7 +21,13 @@ function testServiceWithProperName() {
 
 // Negative test function
 
-
+@test:Config {}
+function testServiceWithEmptyName() returns error? {
+    http:Response response = check testClient->get("/greeting/");
+    test:assertEquals(response.statusCode, 500);
+    json errorPayload = check response.getJsonPayload();
+    test:assertEquals(errorPayload.message, "name should not be empty!");
+}
 
 // After Suite Function
 
