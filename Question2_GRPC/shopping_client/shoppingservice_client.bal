@@ -137,3 +137,17 @@ function checkUserType() returns error? {
     io:println("User type: ", response.user_type);
 }
 
+function createUsers() returns error? {
+    CreateUserRequest request = {
+        user_id: io:readln("Enter new user ID: "),
+        user_name: io:readln("Enter user name: "),
+        email: io:readln("Enter email: "),
+        password: io:readln("Enter password: "),
+        user_type: io:readln("Enter user type: ")
+    };
+    CreateUsersStreamingClient streamingClient = check ep->CreateUsers();
+    check streamingClient->sendCreateUserRequest(request);
+    check streamingClient->complete();
+    CreateUsersResponse? response = check streamingClient->receiveCreateUsersResponse();
+    io:println("User creation status: ", response?.status);
+}
