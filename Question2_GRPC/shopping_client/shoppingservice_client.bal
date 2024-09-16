@@ -145,7 +145,7 @@ function createUsers() returns error? {
         password: io:readln("Enter password: "),
         user_type: io:readln("Enter user type: ")
     };
-    CreateUsersStreamingClient streamingClient = check ep->CreateUsers();
+    
     check streamingClient->sendCreateUserRequest(request);
     check streamingClient->complete();
     CreateUsersResponse? response = check streamingClient->receiveCreateUsersResponse();
