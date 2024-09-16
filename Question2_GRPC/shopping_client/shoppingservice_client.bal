@@ -5,7 +5,7 @@ ShoppingServiceClient ep = check new ("http://localhost:9090");
 
 function displayMenuOptions() {
     io:println("Please select an option:");
-    io:println("1. Add a product");
+    
     io:println("2. Update a product");
     io:println("3. Remove a product");
     io:println("4. List available products");
