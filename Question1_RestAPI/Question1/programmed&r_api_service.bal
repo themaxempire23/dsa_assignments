@@ -39,35 +39,7 @@ service / on ep0 {
         return response;
     }
 
-    // # Delete a programme's record by programme code
-    resource function delete programmes/[string programmeCode]() returns http:NoContent|http:NotFound {
-        // Check if the programme exists
-        Programme? existingProgramme = ProgrammeTable[programmeCode];
 
-        if (existingProgramme is ()) {
-            // Programme not found, return NotFound
-            return {
-                body: {
-                    errmsg: string `Programme with code ${programmeCode} not found`
-                }
-            };
-        }
-
-        // Remove the programme from the table
-        _ = ProgrammeTable.remove(programmeCode);
-
-        // Return NoContent status code
-        return {
-            body: {
-                errmsg: string `Programme with code ${programmeCode} deleted successfully`
-            }
-        };
-    }
-
-    // # Retrieve a list of all programmes
-    resource function get programmes() returns Programme[]|http:InternalServerError {
-        return ProgrammeTable.toArray();
-    }
 
     // # Retrieve a specific programme by programme code
     resource function get programmes/[string programmeCode]() returns Programme|http:NotFound {
