@@ -151,17 +151,4 @@ function updateProgramme() returns error|http:Response {
     return programmeClient->put(programmeCode, request);
 }
 
-function deleteProgramme() returns error|http:Response {
-    string programmeCode = io:readln("Enter programme code: ");
-    return programmeClient->delete("/" + programmeCode);
-}
 
-
-function getProgrammesDueForReview() returns http:Response|error {
-    return programmeClient->get("/review/due");
-}
-
-function getProgrammesByFaculty() returns error|http:Response {
-    string facultyName = io:readln("Enter faculty name: ");
-    return programmeClient->get("/faculty/" + facultyName);
-}
