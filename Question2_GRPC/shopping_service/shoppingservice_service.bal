@@ -104,16 +104,7 @@ service "ShoppingService" on new grpc:Listener(9090) {
         }
     }
 
-    remote function AddToCart(AddToCartRequest value) returns AddToCartResponse|error {
-        // Create a CartItem record with immutable key
-        CartItem item = {user_id: value.user_id, sku: value.sku};
-
-        // Add the item to the CartTable
-        CartTable.put(item);
-
-        // Return success status
-        return {status: "Item added to cart"};
-    }
+   
 
     // Function to remove an item from the cart
     // Remote function to remove an item from the cart
