@@ -614,14 +614,6 @@ public type PlaceOrderRequest record {|
     string user_id = "";
 |};
 
-@protobuf:Descriptor {value: SHOPPING_SYSTEM_DESC}
-public type CreateUserRequest record {|
-    string user_id = "";
-    string user_type = "";
-    string user_name = "";
-    string email = "";
-    string password = "";
-|};
 
 @protobuf:Descriptor {value: SHOPPING_SYSTEM_DESC}
 public type RemoveFromCartResponse record {|
