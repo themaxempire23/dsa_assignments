@@ -2,13 +2,20 @@ import ballerina/grpc;
 import ballerina/log;
 import ballerina/time;
 
+public function main() {
+    log:printInfo("Shopping Service starting on port 9090");
+}
+
 @grpc:Descriptor {value: SHOPPING_SYSTEM_DESC}
 service "ShoppingService" on new grpc:Listener(9090) {
 
     remote function AddProduct(AddProductRequest value) returns AddProductResponse|error {
+        log:printInfo("Received request to add product with SKU: " + value.sku);
+
         // Check if product already exists using table's key
         Product? existingProduct = ProductTable[value.sku];
         if (existingProduct is Product) {
+            log:printWarn("Product with SKU " + value.sku + " already exists");
             return error("Product with SKU already exists.");
         }
 
@@ -22,14 +29,18 @@ service "ShoppingService" on new grpc:Listener(9090) {
             status: value.status
         });
 
+        log:printInfo("Successfully added product with SKU: " + value.sku);
         return {product_code: value.sku};
     }
 
     remote function UpdateProduct(UpdateProductRequest value) returns UpdateProductResponse|error {
+        log:printInfo(string `Received request to update product with SKU: ${value.sku}`);
+
         // Check if the product exists
         Product? existingProduct = ProductTable[value.sku];
 
         if (existingProduct is Product) {
+            log:printInfo(string `Updating product with SKU: ${value.sku}`);
             // Update product details
             ProductTable.put({
                 name: value.name,
@@ -40,40 +51,50 @@ service "ShoppingService" on new grpc:Listener(9090) {
                 status: value.status
             });
 
+            log:printInfo(string `Product with SKU: ${value.sku} updated successfully`);
             // Return a successful response
             return {status: "Product updated successfully"};
         } else {
+            log:printError(string `Product with SKU: ${value.sku} does not exist. Update failed.`);
             // Return an error if the product does not exist
-            return error("Product with SKU " + value.sku + " does not exist.");
+            return error(string `Product with SKU ${value.sku} does not exist.`);
         }
     }
 
     remote function RemoveProduct(RemoveProductRequest value) returns RemoveProductResponse|error {
+        log:printInfo(string `Received request to remove product with SKU: ${value.sku}`);
+
         // Check if the product exists
         Product? existingProduct = ProductTable[value.sku];
 
         if (existingProduct is Product) {
+            log:printInfo(string `Removing product with SKU: ${value.sku}`);
             // Remove the product from the table
             _ = ProductTable.remove(value.sku);
 
+            log:printInfo("Creating list of remaining products");
             // Create a list of remaining products
             Product[] remainingProducts = [];
             foreach Product product in ProductTable {
                 remainingProducts.push(product);
             }
 
+            log:printInfo(string `Product with SKU: ${value.sku} removed successfully. ${remainingProducts.length()} products remaining.`);
             // Create and return the response with the updated list of products
             RemoveProductResponse response = {
                 products: remainingProducts
             };
             return response;
         } else {
+            log:printError(string `Product with SKU: ${value.sku} does not exist. Removal failed.`);
             // Return an error if the product does not exist
-            return error("Product with SKU " + value.sku + " does not exist.");
+            return error(string `Product with SKU ${value.sku} does not exist.`);
         }
     }
 
     remote function ListAvailableProducts(ListAvailableProductsRequest value) returns ListAvailableProductsResponse|error {
+        log:printInfo("Received request for ListAvailableProducts");
+
         // List to hold available products
         Product[] availableProducts = [];
 
@@ -84,77 +105,116 @@ service "ShoppingService" on new grpc:Listener(9090) {
             }
         }
 
+        log:printInfo("Returning " + availableProducts.length().toString() + " available products");
+
         // Return the available products in the response
         return {products: availableProducts};
     }
 
     remote function SearchProduct(SearchProductRequest value) returns SearchProductResponse|error {
+        log:printInfo("Received request to search for product with SKU: " + value.sku);
+
         // Retrieve the product using SKU from the ProductTable
         Product? product = ProductTable[value.sku];
 
         if (product is Product) {
+            log:printInfo("Found product with SKU: " + value.sku);
             // Create and return the response with the product details
             SearchProductResponse response = {
                 product: product
             };
             return response;
         } else {
+            log:printError("Product with SKU " + value.sku + " not found");
             // Return an error if the product does not exist
             return error("Product with SKU " + value.sku + " not found.");
         }
     }
 
     remote function AddToCart(AddToCartRequest value) returns AddToCartResponse|error {
+        log:printInfo(string `Received request to add item to cart. User ID: ${value.user_id}, SKU: ${value.sku}`);
+
         // Create a CartItem record with immutable key
         CartItem item = {user_id: value.user_id, sku: value.sku};
 
-        // Add the item to the CartTable
-        CartTable.put(item);
+        // Check if the product exists before adding to cart
+        Product? product = ProductTable[value.sku];
+        if (product is Product) {
+            log:printInfo(string `Adding item with SKU: ${value.sku} to cart for User ID: ${value.user_id}`);
 
-        // Return success status
-        return {status: "Item added to cart"};
+            // Add the item to the CartTable
+            CartTable.put(item);
+
+            log:printInfo(string `Item with SKU: ${value.sku} successfully added to cart for User ID: ${value.user_id}`);
+
+            // Return success status
+            return {status: "Item added to cart"};
+        } else {
+            log:printError(string `Failed to add item to cart. Product with SKU: ${value.sku} does not exist.`);
+            return error(string `Product with SKU ${value.sku} does not exist.`);
+        }
     }
 
     // Function to remove an item from the cart
     // Remote function to remove an item from the cart
     remote function RemoveFromCart(RemoveFromCartRequest value) returns RemoveFromCartResponse|error {
-        // Try to retrieve the item with the given sku
-        CartItem? itemToRemove = CartTable[value.sku];
+    log:printInfo(string `Received request to remove item from cart SKU: ${value.sku}`);
 
-        if (itemToRemove is CartItem) {
-            // If the item exists, remove it from the CartTable
-            _ = CartTable.remove(value.sku);
+    // Try to retrieve the item with the given sku
+    CartItem? itemToRemove = CartTable[value.sku];
 
-            // Return success status
-            return {status: "Item removed from cart"};
-        } else {
-            // Return failure status if the item does not exist
-            return {status: "Item not found in cart"};
-        }
+    if (itemToRemove is CartItem) {
+        log:printInfo(string `Item with SKU: ${value.sku} found in cart Proceeding to remove.`);
+
+        // If the item exists, remove it from the CartTable
+        _ = CartTable.remove(value.sku);
+
+        log:printInfo(string `Item with SKU: ${value.sku} successfully removed from cart`);
+
+        // Return success status
+        return {status: "Item removed from cart"};
+    } else {
+        log:printError(string `Failed to remove item from cart. Item with SKU: ${value.sku} not found in cart`);
+        
+        // Return failure status if the item does not exist
+        return {status: "Item not found in cart"};
     }
+}
+
 
     // Remote function to view the cart for a specific user
     // Define the ViewCart function
     remote function ViewCart(ViewCartRequest value) returns ViewCartResponse|error {
-        // List to hold products in the cart
-        Product[] productsInCart = [];
+    log:printInfo(string `Received request to view cart. User ID: ${value.user_id}`);
 
-        // Iterate over the CartTable to find items for the given user_id
-        foreach CartItem item in CartTable {
-            if (item.user_id == value.user_id) {
-                // Check if the product exists in the ProductTable
-                Product? product = ProductTable[item.sku];
+    // List to hold products in the cart
+    Product[] productsInCart = [];
 
-                if (product is Product) {
-                    // Add the product to the list if found
-                    productsInCart.push(product);
-                }
+    // Iterate over the CartTable to find items for the given user_id
+    foreach CartItem item in CartTable {
+        if (item.user_id == value.user_id) {
+            log:printInfo(string `Found item with SKU: ${item.sku} in cart for User ID: ${value.user_id}. Checking product availability.`);
+
+            // Check if the product exists in the ProductTable
+            Product? product = ProductTable[item.sku];
+
+            if (product is Product) {
+                log:printInfo(string `Product with SKU: ${item.sku} found in ProductTable. Adding to cart view.`);
+
+                // Add the product to the list if found
+                productsInCart.push(product);
+            } else {
+                log:printWarn(string `Product with SKU: ${item.sku} not found in ProductTable for User ID: ${value.user_id}.`);
             }
         }
-
-        // Return the products in the cart
-        return {products: productsInCart};
     }
+
+    log:printInfo(string `Completed viewing cart for User ID: ${value.user_id}. Total items in cart: ${productsInCart.length}`);
+
+    // Return the products in the cart
+    return {products: productsInCart};
+}
+
 
     // Remote function to place an order
     remote function PlaceOrder(PlaceOrderRequest value) returns PlaceOrderResponse|error {
