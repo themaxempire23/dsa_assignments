@@ -31,6 +31,7 @@ This section contains a web-based GUI for managing programmes. It interacts with
 
    ```bash
    npm run dev
+   ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
@@ -51,15 +52,50 @@ The web interface communicates with the backend service at [http://localhost:909
 
    ```bash
    bal run ../{path to service folder}
+   ```
+
 2. **Run the Client:**
    After starting the service, run the GUI or CLI client with:
-    
    ```bash
    bal run client.bal
+   ```
 
 **Programme Data:**
 Dates are formatted as RFC 3339 when adding or updating programmes.
 
-### Question 2: gRPC
+### Question 2: gRPC - Online Shopping System
+
+This section contains instructions for running and interacting with the **Online Shopping System** using gRPC.
+
+#### Running the gRPC Service
+
+1. **Start the gRPC Shopping Service:**
+   Navigate to the folder containing the Ballerina shopping service and execute the following command to start the service:
+
+   ```bash
+   bal run ../shopping_service
+   ```
+
+This will start the gRPC server responsible for managing shopping-related functionalities such as fetching products, managing cart items, and processing orders.
+
+### Running Envoy Proxy
+
+**Run Envoy:** In a separate terminal, navigate to the folder where your Envoy configuration is located, and execute the following command to start the Envoy proxy:
+
+```bash
+envoy --config-path envoy.yaml
 
 
+```
+The Envoy proxy will act as a bridge to allow gRPC-web clients to communicate with the gRPC backend service.
+
+### Accessing the gRPC Web Client
+
+**Access the gRPC Client:** Once both the shopping service and Envoy are running, you can access the **Online Shopping System** via the gRPC web client at the following URL:
+
+[https://tinyurl.com/gRPCDSA1](https://tinyurl.com/gRPCDSA1)
+
+**Login credentials:**
+
+- Username: `user1`
+- Username: `admin1`
