@@ -13,19 +13,7 @@ public isolated client class ShoppingServiceClient {
         check self.grpcClient.initStub(self, SHOPPING_SYSTEM_DESC);
     }
 
-    isolated remote function AddProduct(AddProductRequest|ContextAddProductRequest req) returns AddProductResponse|grpc:Error {
-        map<string|string[]> headers = {};
-        AddProductRequest message;
-        if req is ContextAddProductRequest {
-            message = req.content;
-            headers = req.headers;
-        } else {
-            message = req;
-        }
-        var payload = check self.grpcClient->executeSimpleRPC("shopping.ShoppingService/AddProduct", message, headers);
-        [anydata, map<string|string[]>] [result, _] = payload;
-        return <AddProductResponse>result;
-    }
+    
 
     isolated remote function AddProductContext(AddProductRequest|ContextAddProductRequest req) returns ContextAddProductResponse|grpc:Error {
         map<string|string[]> headers = {};
