@@ -3,17 +3,7 @@ import ballerina/io;
 
 http:Client programmeClient = check new("http://localhost:9090/programmes");
 
-function displayMenuOptions() {
-    io:println("Please select an option:");
-    io:println("1. Add a new programme");
-    io:println("2. Retrieve all programmes");
-    io:println("3. Retrieve programme by code");
-    io:println("4. Update a programme");
-    io:println("5. Delete a programme");
-    io:println("6. Retrieve programmes due for review");
-    io:println("7. Retrieve programmes by faculty");
-    io:println("0. Exit");
-}
+
 
 public function main() returns error? {
     io:println("Welcome to the Programme Management CLI!");
