@@ -158,68 +158,69 @@ service "ShoppingService" on new grpc:Listener(9090) {
     // Function to remove an item from the cart
     // Remote function to remove an item from the cart
     remote function RemoveFromCart(RemoveFromCartRequest value) returns RemoveFromCartResponse|error {
-    log:printInfo(string `Received request to remove item from cart SKU: ${value.sku}`);
+        log:printInfo(string `Received request to remove item from cart SKU: ${value.sku}`);
 
-    // Try to retrieve the item with the given sku
-    CartItem? itemToRemove = CartTable[value.sku];
+        // Try to retrieve the item with the given sku
+        CartItem? itemToRemove = CartTable[value.sku];
 
-    if (itemToRemove is CartItem) {
-        log:printInfo(string `Item with SKU: ${value.sku} found in cart Proceeding to remove.`);
+        if (itemToRemove is CartItem) {
+            log:printInfo(string `Item with SKU: ${value.sku} found in cart Proceeding to remove.`);
 
-        // If the item exists, remove it from the CartTable
-        _ = CartTable.remove(value.sku);
+            // If the item exists, remove it from the CartTable
+            _ = CartTable.remove(value.sku);
 
-        log:printInfo(string `Item with SKU: ${value.sku} successfully removed from cart`);
+            log:printInfo(string `Item with SKU: ${value.sku} successfully removed from cart`);
 
-        // Return success status
-        return {status: "Item removed from cart"};
-    } else {
-        log:printError(string `Failed to remove item from cart. Item with SKU: ${value.sku} not found in cart`);
-        
-        // Return failure status if the item does not exist
-        return {status: "Item not found in cart"};
+            // Return success status
+            return {status: "Item removed from cart"};
+        } else {
+            log:printError(string `Failed to remove item from cart. Item with SKU: ${value.sku} not found in cart`);
+
+            // Return failure status if the item does not exist
+            return {status: "Item not found in cart"};
+        }
     }
-}
-
 
     // Remote function to view the cart for a specific user
     // Define the ViewCart function
     remote function ViewCart(ViewCartRequest value) returns ViewCartResponse|error {
-    log:printInfo(string `Received request to view cart. User ID: ${value.user_id}`);
+        log:printInfo(string `Received request to view cart. User ID: ${value.user_id}`);
 
-    // List to hold products in the cart
-    Product[] productsInCart = [];
+        // List to hold products in the cart
+        Product[] productsInCart = [];
 
-    // Iterate over the CartTable to find items for the given user_id
-    foreach CartItem item in CartTable {
-        if (item.user_id == value.user_id) {
-            log:printInfo(string `Found item with SKU: ${item.sku} in cart for User ID: ${value.user_id}. Checking product availability.`);
+        // Iterate over the CartTable to find items for the given user_id
+        foreach CartItem item in CartTable {
+            if (item.user_id == value.user_id) {
+                log:printInfo(string `Found item with SKU: ${item.sku} in cart for User ID: ${value.user_id}. Checking product availability.`);
 
-            // Check if the product exists in the ProductTable
-            Product? product = ProductTable[item.sku];
+                // Check if the product exists in the ProductTable
+                Product? product = ProductTable[item.sku];
 
-            if (product is Product) {
-                log:printInfo(string `Product with SKU: ${item.sku} found in ProductTable. Adding to cart view.`);
+                if (product is Product) {
+                    log:printInfo(string `Product with SKU: ${item.sku} found in ProductTable. Adding to cart view.`);
 
-                // Add the product to the list if found
-                productsInCart.push(product);
-            } else {
-                log:printWarn(string `Product with SKU: ${item.sku} not found in ProductTable for User ID: ${value.user_id}.`);
+                    // Add the product to the list if found
+                    productsInCart.push(product);
+                } else {
+                    log:printWarn(string `Product with SKU: ${item.sku} not found in ProductTable for User ID: ${value.user_id}.`);
+                }
             }
         }
+
+        log:printInfo(string `Completed viewing cart for User ID: ${value.user_id}`);
+
+        // Return the products in the cart
+        return {products: productsInCart};
     }
-
-    log:printInfo(string `Completed viewing cart for User ID: ${value.user_id}. Total items in cart: ${productsInCart.length}`);
-
-    // Return the products in the cart
-    return {products: productsInCart};
-}
-
 
     // Remote function to place an order
     remote function PlaceOrder(PlaceOrderRequest value) returns PlaceOrderResponse|error {
+        log:printInfo(string `Received request to place an order. User ID: ${value.user_id}`);
+
         // Generate a unique order ID
         string orderId = generateOrderId();
+        log:printInfo(string `Generated order ID: ${orderId} for User ID: ${value.user_id}`);
 
         // Create a list to hold products for the order
         Product[] orderedProducts = [];
@@ -227,23 +228,33 @@ service "ShoppingService" on new grpc:Listener(9090) {
         // Iterate over CartTable to find items for the given user_id
         foreach CartItem item in CartTable {
             if (item.user_id == value.user_id) {
+                log:printInfo(string `Found item with SKU: ${item.sku} in cart for User ID: ${value.user_id}. Checking product availability.`);
+
                 // Check if the product exists in ProductTable
                 Product? product = ProductTable[item.sku];
 
                 if (product is Product) {
+                    log:printInfo(string `Product with SKU: ${item.sku} found in ProductTable. Adding to order.`);
+
                     // Add the product to the list if found
                     orderedProducts.push(product);
 
                     // Optionally, remove the item from the CartTable
                     _ = CartTable.remove(item.sku);
+                    log:printInfo(string `Removed item with SKU: ${item.sku} from cart for User ID: ${value.user_id}`);
+                } else {
+                    log:printWarn(string `Product with SKU: ${item.sku} not found in ProductTable for User ID: ${value.user_id}.`);
                 }
             }
         }
 
         // Check if any products were ordered
         if (orderedProducts.length() == 0) {
+            log:printError(string `No items found in the cart for User ID: ${value.user_id}. Order could not be placed.`);
             return error("No items found in the cart for user_id: " + value.user_id);
         }
+
+        log:printInfo(string `Order placed successfully for User ID: ${value.user_id}. Order ID: ${orderId}. Total items ordered: ${orderedProducts.length()}`);
 
         // Return the order ID and status
         return {order_id: orderId, status: "Order placed successfully"};
