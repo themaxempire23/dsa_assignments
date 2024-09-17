@@ -6,7 +6,7 @@ for managing programmes.
 ## Group Members
 
 - [Frans Nekongo- 221004351]
-- []
+- [Max Haikali- 221128220]
 - []
 - []
 
