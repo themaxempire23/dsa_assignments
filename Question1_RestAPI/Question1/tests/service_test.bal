@@ -31,7 +31,4 @@ function testServiceWithEmptyName() returns error? {
 
 // After Suite Function
 
-@test:AfterSuite
-function afterSuiteFunc() {
-    io:println("I'm the after suite function!");
-}
+
