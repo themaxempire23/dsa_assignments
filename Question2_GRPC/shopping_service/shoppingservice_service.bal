@@ -279,13 +279,17 @@ service "ShoppingService" on new grpc:Listener(9090) {
         int successCount = 0;
         int failureCount = 0;
 
+        log:printInfo("Started processing CreateUser requests.");
+
         // Iterate over the incoming stream of CreateUserRequest messages
         error? result = from CreateUserRequest req in clientStream
             do {
+                log:printInfo(string `Processing CreateUserRequest for user_id: ${req.user_id}`);
+
                 // Check if user_id already exists
                 if (UserTable[req.user_id] is User) {
                     // Log a message or increment failure count if user already exists
-                    log:printInfo("User with user_id " + req.user_id + " already exists. Skipping.");
+                    log:printInfo(string `User with user_id ${req.user_id} already exists. Skipping.`);
                     failureCount += 1;
                 } else {
                     // Create a new User record
@@ -297,19 +301,23 @@ service "ShoppingService" on new grpc:Listener(9090) {
                         user_type: req.user_type
                     };
 
+                    log:printInfo(string `Creating new user with user_id: ${req.user_id}`);
+
                     // Add the new user to the UserTable
                     UserTable.add(newUser);
                     successCount += 1;
+                    log:printInfo(string `User with user_id: ${req.user_id} created successfully.`);
                 }
             };
 
         if (result is error) {
             // Handle errors during stream processing
-            log:printError("Error occurred while processing the stream.", 'error = result);
+            log:printError(string `Error occurred while processing the stream. Error: `, 'error = result);
         }
 
         // Create response message based on success and failure counts
         string status = "Users processed successfully. Success: " + successCount.toString() + ", Failure: " + failureCount.toString();
+        log:printInfo(string `Processing complete. ${status}`);
         return {status: status};
     }
 
