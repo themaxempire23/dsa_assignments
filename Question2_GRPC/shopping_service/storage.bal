@@ -25,14 +25,14 @@ public final table<Product> key(sku) ProductTable = table [
 
 public final table<User> key(user_id) UserTable = table [
     {
-        user_id: "user001",
+        user_id: "user1",
         user_name: "Alice",
         email: "alice@example.com",
         password: "password123",
         user_type: "customer"
     },
     {
-        user_id: "user002",
+        user_id: "admin1",
         user_name: "Bob",
         email: "bob@example.com",
         password: "adminpass",
