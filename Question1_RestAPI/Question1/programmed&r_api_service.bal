@@ -12,6 +12,15 @@ listener http:Listener ep0 = new (9090, config = {host: "localhost"});
 const SECONDS_IN_A_YEAR = 31536000; // Approximate number of seconds in a year
 
 // Service-level CORS configuration
+@http:ServiceConfig {
+    cors: {
+        allowOrigins: ["*"], // Allow all origins or specify your allowed origins
+        allowCredentials: false,
+        allowHeaders: ["Content-Type", "Authorization"],
+        exposeHeaders: ["X-Custom-Header"],
+        maxAge: 3600
+    }
+}
 
 service / on ep0 {
     resource function options programme() returns http:Response {
