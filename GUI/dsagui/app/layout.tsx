@@ -1,22 +1,25 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type {Metadata} from "next";
+import {Inter} from "next/font/google";
 import "./globals.css";
+import {UserProvider} from "@/public/components/UserContext";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({subsets: ["latin"]});
 
 export const metadata: Metadata = {
-  title: "DSA Assignment 1",
-  description: "Made by Frans Nekongo",
+    title: "DSA Assignment 1",
+    description: "by Frans Nekongo",
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
+                                       children,
+                                   }: Readonly<{
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
-  );
+    return (
+        <html lang="en">
+        <UserProvider>
+            <body className={inter.className}>{children}</body>
+        </UserProvider>
+        </html>
+    );
 }

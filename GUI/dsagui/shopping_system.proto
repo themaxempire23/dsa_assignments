@@ -1,0 +1,153 @@
+syntax = "proto3";
+
+package shopping;
+
+service ShoppingService {
+    // Admin functions
+    rpc AddProduct (AddProductRequest) returns (AddProductResponse);
+    rpc CreateUsers (stream CreateUserRequest) returns (CreateUsersResponse);
+    rpc UpdateProduct (UpdateProductRequest) returns (UpdateProductResponse);
+    rpc RemoveProduct (RemoveProductRequest) returns (RemoveProductResponse);
+
+    // Customer functions
+    rpc ListAvailableProducts (ListAvailableProductsRequest) returns (ListAvailableProductsResponse);
+    rpc SearchProduct (SearchProductRequest) returns (SearchProductResponse);
+    rpc AddToCart (AddToCartRequest) returns (AddToCartResponse);
+    rpc RemoveFromCart (RemoveFromCartRequest) returns (RemoveFromCartResponse);
+    rpc ViewCart (ViewCartRequest) returns (ViewCartResponse); // New RPC to view cart contents
+    rpc PlaceOrder (PlaceOrderRequest) returns (PlaceOrderResponse);
+
+    // New function to check user type
+    rpc CheckUserType (CheckUserTypeRequest) returns (CheckUserTypeResponse);
+}
+
+// Request and response messages for checking user type
+message CheckUserTypeRequest {
+    string user_id = 1; // The unique identifier for the user
+}
+
+message CheckUserTypeResponse {
+    string user_type = 1; // "admin" or "customer"
+}
+
+// Admin request and response messages
+message AddProductRequest {
+    string name = 1;
+    string description = 2;
+    float price = 3;
+    int32 stock_quantity = 4;
+    string sku = 5;
+    string status = 6; // e.g., "available", "out_of_stock"
+}
+
+message AddProductResponse {
+    string product_code = 1; // unique code for the added product
+}
+
+message CreateUserRequest {
+    string user_id = 1;
+    string user_type = 2; // e.g., "customer", "admin"
+    string user_name = 3;
+    string email = 4;
+    string password = 5;
+}
+
+message CreateUsersResponse {
+    string status = 1; // success or failure
+}
+
+message UpdateProductRequest {
+    string sku = 1;
+    string name = 2;
+    string description = 3;
+    float price = 4;
+    int32 stock_quantity = 5;
+    string status = 6; // e.g., "available", "out_of_stock"
+}
+
+message UpdateProductResponse {
+    string status = 1; // success or failure
+}
+
+message RemoveProductRequest {
+    string sku = 1;
+}
+
+message RemoveProductResponse {
+    repeated Product products = 1; // updated list of products after removal
+}
+
+// Customer request and response messages
+message ListAvailableProductsRequest {}
+
+message ListAvailableProductsResponse {
+    repeated Product products = 1;
+}
+
+message SearchProductRequest {
+    string sku = 1;
+}
+
+message SearchProductResponse {
+    oneof result {
+        Product product = 1;
+        string message = 2; // error message if product is not found
+    }
+}
+
+message AddToCartRequest {
+    string user_id = 1;
+    string sku = 2;
+}
+
+message AddToCartResponse {
+    string status = 1; // success or failure
+}
+
+message RemoveFromCartRequest {
+    string sku = 2;
+}
+
+message RemoveFromCartResponse {
+    string status = 1; // success or failure
+}
+
+message ViewCartRequest {
+    string user_id = 1; // The unique identifier for the customer
+}
+
+message ViewCartResponse {
+    repeated Product products = 1; // List of products in the customer's cart
+}
+
+message PlaceOrderRequest {
+    string user_id = 1;
+}
+
+message PlaceOrderResponse {
+    string order_id = 1; // unique order identifier
+    string status = 2; // e.g., "order placed", "order failed"
+}
+
+// Product definition
+message Product {
+    string name = 1;
+    string description = 2;
+    float price = 3;
+    int32 stock_quantity = 4;
+    string sku = 5;
+    string status = 6; // e.g., "available", "out_of_stock"
+}
+
+message CartItem  {
+   string user_id = 1;
+   string sku = 2;
+};
+// User definition
+message User {
+    string user_id = 1;
+    string user_name = 2;
+    string email = 3;
+    string password = 4;
+    string user_type = 5; // e.g., "customer", "admin"
+}
