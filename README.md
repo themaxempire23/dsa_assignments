@@ -33,7 +33,7 @@ This section contains a web-based GUI for managing programmes. It interacts with
    npm run dev
    ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+
 
 **Backend API:**
 The web interface communicates with the backend service at [http://localhost:9090](http://localhost:9090).
@@ -60,8 +60,15 @@ The web interface communicates with the backend service at [http://localhost:909
    bal run client.bal
    ```
 
+3. **Use Web Client:**
+   use the gui:
+   ```bash
+   https://tinyurl.com/RestApiDSA1
+   ```
+
 **Programme Data:**
 Dates are formatted as RFC 3339 when adding or updating programmes.
+
 
 ### Question 2: gRPC - Online Shopping System
 

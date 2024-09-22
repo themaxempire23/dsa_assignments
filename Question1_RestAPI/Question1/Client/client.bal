@@ -1,6 +1,9 @@
 import ballerina/http;
 import ballerina/io;
 
+// bal run "/home/rxd/Documents/SCHOOL 2024(SEM1)/Distributed Systems/Assignments/dsa_assignments/Question1_RestAPI/Question1/Client/client.bal"
+
+
 http:Client programmeClient = check new("http://localhost:9090/programmes");
 
 function displayMenuOptions() {
