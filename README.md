@@ -10,6 +10,7 @@ for managing programmes.
 - [Abisai Sem - 221084703]
 - [Nokutenda Ray Katananga - 221113657]
 - [Jose Clayton - 221078673]
+- [Marcel Namaseb - 221009736]
 
 ## Assignment 1
 
