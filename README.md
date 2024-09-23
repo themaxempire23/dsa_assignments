@@ -9,6 +9,7 @@ for managing programmes.
 - [Max Haikali- 221128220]
 - [Abisai Sem - 221084703]
 - [Nokutenda Ray Katananga - 221113657]
+- [Jose Clayton - 221078673]
 
 ## Assignment 1
 
