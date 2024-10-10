@@ -1,5 +1,5 @@
 table<CartItem> key(sku) CartTable = table [
-    {user_id: "user1", sku: "sku123"},
+    {user_id: "user1", sku: "sku123"}, //customer cart
     {user_id: "user1", sku: "sku456"},
     {user_id: "user2", sku: "sku789"}
 ];

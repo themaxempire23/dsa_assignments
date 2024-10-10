@@ -89,7 +89,7 @@ function updateProduct() returns error? {
 
 function removeProduct() returns error? {
     RemoveProductRequest request = {sku: io:readln("Enter product SKU to remove: ")};
-    RemoveProductResponse response = check ep->RemoveProduct(request);
+    RemoveProductResponse response =  check ep->RemoveProduct(request);
     io:println("Remaining products: ", response.products);
 }
 
