@@ -7,8 +7,10 @@ for managing programmes.
 
 - [Frans Nekongo- 221004351]
 - [Max Haikali- 221128220]
-- []
-- []
+- [Abisai Sem - 221084703]
+- [Nokutenda Ray Katananga - 221113657]
+- [Jose Clayton - 221078673]
+- [Marcel Namaseb - 221009736]
 
 ## Assignment 1
 
